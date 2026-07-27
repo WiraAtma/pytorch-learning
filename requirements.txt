@@ -8,3 +8,4 @@ torchvision
 requests
 tqdm
 mlxtend
+torchinfo
