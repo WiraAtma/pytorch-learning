@@ -94,9 +94,9 @@ def train(model: torch.nn.Module,
     print(f"\nepoch : {epoch + 1} | train_loss : {train_loss:.4f} | train_acc : {train_acc:.4f} | test_loss : {test_loss:.4f} | test_acc : {test_acc:.4f}")
 
     results["train_loss"].append(train_loss)
-    results["train_acc"].append(train_loss)
-    results["test_loss"].append(train_loss)
-    results["test_acc"].append(train_loss)
+    results["train_acc"].append(train_acc)
+    results["test_loss"].append(test_loss)
+    results["test_acc"].append(test_acc)
 
   train_end_time = timer()
 

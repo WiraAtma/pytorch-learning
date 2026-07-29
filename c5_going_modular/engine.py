@@ -1,6 +1,7 @@
 # %% 05_going_modular/engine.py
 
-import torch, torchvision
+import torch
+from timeit import default_timer as timer
 
 from tqdm.auto import tqdm
 from typing import Dict, List, Tuple
@@ -66,8 +67,8 @@ def test_step(model: torch.nn.Module,
 def train(model: torch.nn.Module,
           train_dataloader: torch.utils.data.DataLoader,
           test_dataloader: torch.utils.data.DataLoader,
-          optimizer: torch.optim.Optimizer,
           loss_fn: torch.nn.Module,
+          optimizer: torch.optim.Optimizer,
           epochs: int,
           device: torch.device) -> Dict[str, List]:
 
@@ -76,18 +77,29 @@ def train(model: torch.nn.Module,
              "test_loss": [],
              "test_acc": []}
 
+  train_start_time = timer()
+
   for epoch in tqdm(range(epochs)):
     train_loss, train_acc = train_step(model=model,
                                        dataloader=train_dataloader,
-                                       loss_fn=loss_fn,
                                        optimizer=optimizer,
-                                       device=device)
+                                       device=device,
+                                       loss_fn=loss_fn)
 
     test_loss, test_acc = test_step(model=model,
                                     dataloader=test_dataloader,
                                     loss_fn=loss_fn,
                                     device=device)
 
-    print(f"Epoch : {epoch+1} | train_loss: {train_loss:.4f} | train_acc: {train_acc:.4f} | test_loss: {test_loss:.4f} | test_acc: {test_acc:.4f}")
+    print(f"\nepoch : {epoch + 1} | train_loss : {train_loss:.4f} | train_acc : {train_acc:.4f} | test_loss : {test_loss:.4f} | test_acc : {test_acc:.4f}")
+
+    results["train_loss"].append(train_loss)
+    results["train_acc"].append(train_acc)
+    results["test_loss"].append(test_loss)
+    results["test_acc"].append(test_acc)
+
+  train_end_time = timer()
+
+  print(f"Waktu Yang Dibutuhkan Training : {train_end_time - train_start_time:.3f} seconds")
 
   return results
